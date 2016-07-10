@@ -1,0 +1,43 @@
+{
+  "name": "postcss-adaptive",
+  "version": "0.0.1",
+  "description": "A postcss plugin that calculates and generates adaptive css code, such as `rem` and `0.5px borders for retina devices`",
+  "main": "index.js",
+  "author": "songsiqi <songsiqi2006@126.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/songsiqi/postcss-adaptive.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "postcss",
+    "rem",
+    "hairline"
+  ],
+  "scripts": {
+    "test:babel": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
+    "test:lint": "eslint src",
+    "test:mocha": "mocha",
+    "test": "npm run test:babel && npm run test:lint && npm run test:mocha",
+    "cover": "node node_modules/.bin/isparta cover node_modules/.bin/_mocha -- --reporter dot"
+  },
+  "dependencies": {
+    "css": "^2.2.1",
+    "postcss": "^5.0.21"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.10.1",
+    "babel-core": "^6.10.4",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "chai": "^3.5.0",
+    "eslint": "^2.13.1",
+    "isparta": "~4.0.0",
+    "mocha": "^2.4.5"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  }
+}
