@@ -1,18 +1,17 @@
 import css from 'css'
-import { extend } from './util'
 
 const PX_REG = /\b(\d+(\.\d+)?)px\b/
 const PX_GLOBAL_REG = new RegExp(PX_REG.source, 'g')
 
 export class Adaptive {
   constructor (options) {
-    this.config = {
+    const defaultConfig = {
       baseDpr: 2,                // base device pixel ratio (default: 2)
       remUnit: 75,               // rem unit value (default: 75)
       remPrecision: 6,           // rem value precision (default: 6)
       hairlineClass: 'hairlines' // class name of 1px border (default 'hairlines')
     }
-    extend(this.config, options)
+    this.config = Object.assign({}, defaultConfig, options)
   }
 
   parse (code) {
@@ -65,8 +64,7 @@ export class Adaptive {
           else {
             // generate new rule of `hairline`
             if (!noDealHairline && this._needHairline(declaration.value)) {
-              const newDeclaration = {}
-              extend(newDeclaration, declaration)
+              const newDeclaration = Object.assign({}, declaration)
               newDeclaration.value = this._getCalcValue('px', declaration.value, true)
               newRule.declarations.push(newDeclaration)
             }
