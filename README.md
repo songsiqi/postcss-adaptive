@@ -16,6 +16,15 @@
 
 A [postcss](https://www.npmjs.com/package/postcss) plugin that calculates and generates adaptive css code, such as `rem` and `0.5px borders for retina devices`.
 
+## Usage
+
+The raw stylesheet only contains @2x style, and if you
+
+* don't intend to transform the original value, add `/*no*/` after the declaration
+* intend to use `rem` unit，add `/*rem*/` after the declaration
+
+**Attention: Dealing with SASS or LESS, only `/*...*/` comment can be used, in order to have the comments persisted.**
+
 Before processing:
 
 ```css
@@ -24,6 +33,7 @@ Before processing:
   width: 150px; /*rem*/
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
+  border-left: 1px solid #ddd; /*no*/
 }
 ```
 
@@ -35,6 +45,7 @@ After processing:
   width: 2rem;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
+  border-left: 1px solid #ddd;
 }
 .hairlines .selector {
   border-top: 0.5px solid #ddd;
@@ -42,9 +53,7 @@ After processing:
 }
 ```
 
-## Usage
-
-### API
+## API
 
 `adaptive(config)`
 
@@ -138,6 +147,10 @@ module.exports = function (grunt) {
 ```
 
 ## Change Log
+
+### 0.1.4
+
+* Support `/*no*/` comment.
 
 ### 0.1.0
 

@@ -20,7 +20,7 @@ export class Adaptive {
     return css.stringify(astObj)
   }
 
-  _processRules (rules, noDealHairline = false) { // FIXME: keyframes do not support `force px` comment
+  _processRules (rules, noDealHairline = false) { // FIXME: keyframes do not support `hairline`
     const { hairlineClass } = this.config
 
     for (let i = 0; i < rules.length; i++) {
@@ -56,26 +56,31 @@ export class Adaptive {
         if (declaration.type === 'declaration' && PX_REG.test(declaration.value)) {
           const nextDeclaration = declarations[j + 1]
 
-          // need transform to `rem`
-          if (nextDeclaration && nextDeclaration.type === 'comment' && nextDeclaration.comment.trim() === 'rem') {
-            declaration.value = this._getCalcValue('rem', declaration.value)
-            declarations.splice(j + 1, 1) // delete corresponding comment
-          }
-          else {
-            // generate new rule of `hairline`
-            if (!noDealHairline && this._needHairline(declaration.value)) {
-              const newDeclaration = Object.assign({}, declaration)
-              newDeclaration.value = this._getCalcValue('px', declaration.value, true)
-              newRule.declarations.push(newDeclaration)
+          // no transform & transform to `rem`
+          if (nextDeclaration && nextDeclaration.type === 'comment') {
+            const commentContent = nextDeclaration.comment.trim()
+            if (commentContent === 'no' || commentContent === 'rem') {
+              if (commentContent === 'rem') {
+                declaration.value = this._getCalcValue('rem', declaration.value)
+              }
+              declarations.splice(j + 1, 1) // delete corresponding comment
+              continue
             }
-
-            // common transform
-            declaration.value = this._getCalcValue('px', declaration.value)
           }
+
+          // generate a new rule of `hairline`
+          if (!noDealHairline && this._needHairline(declaration.value)) {
+            const newDeclaration = Object.assign({}, declaration)
+            newDeclaration.value = this._getCalcValue('px', declaration.value, true)
+            newRule.declarations.push(newDeclaration)
+          }
+
+          // common transform
+          declaration.value = this._getCalcValue('px', declaration.value)
         }
       }
 
-      // add the new rule of `hairline`
+      // add the new rule of `hairline` to stylesheet
       if (!noDealHairline && newRule.declarations.length) {
         rules.splice(i + 1, 0, newRule)
         i++ // skip the added new rule
