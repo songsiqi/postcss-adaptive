@@ -3,7 +3,7 @@ import css from 'css'
 const PX_REG = /\b(\d+(\.\d+)?)px\b/
 const PX_GLOBAL_REG = new RegExp(PX_REG.source, 'g')
 
-export class Adaptive {
+export default class Adaptive {
   constructor (options) {
     const defaultConfig = {
       baseDpr: 2,                // base device pixel ratio (default: 2)
@@ -108,12 +108,14 @@ export class Adaptive {
   _needHairline (value) {
     const { baseDpr } = this.config
     const match = value.match(PX_GLOBAL_REG)
+
     if (match) {
       return match.some((pxVal) => {
         const num = pxVal.match(PX_REG)[1] / baseDpr
         return num > 0 && num < 1
       })
     }
+
     /* istanbul ignore next */
     return false
   }

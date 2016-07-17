@@ -1,1 +1,1 @@
-module.exports = require('./lib/').adaptive
+module.exports = require('./lib/').default
