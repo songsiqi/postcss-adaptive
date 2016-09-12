@@ -11,12 +11,20 @@ function readFile (filepath) {
   return ''
 }
 
-describe('normal', function () {
+describe('integration', function () {
 
-  it('integration', function () {
+  it('normal', function () {
     var fixture = readFile('test/fixture.css')
     var expected = readFile('test/expected.css')
     var output = postcss().use(adaptive()).process(fixture).css
+    expect(output).is.a.string
+    expect(output).eql(expected)
+  })
+
+  it('auto rem', function () {
+    var fixture = readFile('test/fixture-autorem.css')
+    var expected = readFile('test/expected.css')
+    var output = postcss().use(adaptive({ autoRem: true })).process(fixture).css
     expect(output).is.a.string
     expect(output).eql(expected)
   })

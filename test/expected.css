@@ -7,6 +7,7 @@
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   border-left: 5px solid #ddd;
+  border-right: 0.013333rem solid #ddd;
   color: #888;
   /* color is gray */
   /* Data URI contains `px` */
@@ -19,7 +20,9 @@
 .hairlines .selector {
   border-top: 0.5px solid #ddd;
   border-bottom: 0.5px solid #ddd;
+  border-right: 0.5px solid #ddd;
   box-shadow: 1px 0.5px #fe353a;
+  border-right-width: 0.5px;
 }
 
 @-webkit-keyframes anim {
@@ -50,6 +53,7 @@
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
     border-left: 5px solid #ddd;
+    border-right: 0.013333rem solid #ddd;
     color: #888;
     /* color is gray */
     /* Data URI contains `px` */
@@ -62,7 +66,9 @@
   .hairlines .selector {
     border-top: 0.5px solid #ddd;
     border-bottom: 0.5px solid #ddd;
+    border-right: 0.5px solid #ddd;
     box-shadow: 1px 0.5px #fe353a;
+    border-right-width: 0.5px;
   }
 
 @-webkit-keyframes anim {

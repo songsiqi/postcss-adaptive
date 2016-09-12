@@ -63,6 +63,7 @@ Config:
 * `baseDpr`: number, base device pixel ratio (default: 2)
 * `remPrecision`: number, rem value precision (default: 6)
 * `hairlineClass`: string, class name of 1px border (default 'hairlines')
+* `autoRem`: string, whether to transform to rem unit (default: false)
 
 ### Node
 
@@ -147,6 +148,10 @@ module.exports = function (grunt) {
 ```
 
 ## Change Log
+
+### 0.2.0
+
+* Support `autoRem` option.
 
 ### 0.1.4
 
