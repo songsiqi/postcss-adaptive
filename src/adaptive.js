@@ -6,10 +6,11 @@ const PX_GLOBAL_REG = new RegExp(PX_REG.source, 'g')
 export default class Adaptive {
   constructor (options) {
     const defaultConfig = {
-      baseDpr: 2,                // base device pixel ratio (default: 2)
-      remUnit: 75,               // rem unit value (default: 75)
-      remPrecision: 6,           // rem value precision (default: 6)
-      hairlineClass: 'hairlines' // class name of 1px border (default 'hairlines')
+      baseDpr: 2,                 // base device pixel ratio (default: 2)
+      remUnit: 75,                // rem unit value (default: 75)
+      remPrecision: 6,            // rem value precision (default: 6)
+      hairlineClass: 'hairlines', // class name of 1px border (default: 'hairlines')
+      autoRem: false              // whether to transform to rem unit (default: false)
     }
     this.config = Object.assign({}, defaultConfig, options)
   }
@@ -21,7 +22,7 @@ export default class Adaptive {
   }
 
   _processRules (rules, noDealHairline = false) { // FIXME: keyframes do not support `hairline`
-    const { hairlineClass } = this.config
+    const { hairlineClass, autoRem } = this.config
 
     for (let i = 0; i < rules.length; i++) {
       const rule = rules[i]
@@ -55,28 +56,35 @@ export default class Adaptive {
         // need transform: declaration && has 'px'
         if (declaration.type === 'declaration' && PX_REG.test(declaration.value)) {
           const nextDeclaration = declarations[j + 1]
+          const originDeclarationValue = declaration.value
+          let mode
 
           // no transform & transform to `rem`
           if (nextDeclaration && nextDeclaration.type === 'comment') {
-            const commentContent = nextDeclaration.comment.trim()
-            if (commentContent === 'no' || commentContent === 'rem') {
-              if (commentContent === 'rem') {
-                declaration.value = this._getCalcValue('rem', declaration.value)
+            mode = nextDeclaration.comment.trim()
+            if (['rem', 'px', 'no'].indexOf(mode) !== -1) {
+              if (mode !== 'no') {
+                declaration.value = this._getCalcValue(mode, declaration.value)
               }
               declarations.splice(j + 1, 1) // delete corresponding comment
-              continue
             }
+            else {
+              mode = autoRem ? 'rem' : 'px'
+              declaration.value = this._getCalcValue(mode, declaration.value)
+            }
+          }
+          // common transform
+          else {
+            mode = autoRem ? 'rem' : 'px'
+            declaration.value = this._getCalcValue(mode, declaration.value)
           }
 
           // generate a new rule of `hairline`
-          if (!noDealHairline && this._needHairline(declaration.value)) {
+          if (!noDealHairline && this._needHairline(originDeclarationValue)) {
             const newDeclaration = Object.assign({}, declaration)
-            newDeclaration.value = this._getCalcValue('px', declaration.value, true)
+            newDeclaration.value = this._getCalcValue('px', originDeclarationValue, true)
             newRule.declarations.push(newDeclaration)
           }
-
-          // common transform
-          declaration.value = this._getCalcValue('px', declaration.value)
         }
       }
 
