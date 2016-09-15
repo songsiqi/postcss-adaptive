@@ -1,4 +1,5 @@
 import css from 'css'
+import cssmin from 'cssmin'
 
 const PX_REG = /\b(\d+(\.\d+)?)px\b/
 const PX_GLOBAL_REG = new RegExp(PX_REG.source, 'g')
@@ -10,15 +11,18 @@ export default class Adaptive {
       remUnit: 75,                // rem unit value (default: 75)
       remPrecision: 6,            // rem value precision (default: 6)
       hairlineClass: 'hairlines', // class name of 1px border (default: 'hairlines')
-      autoRem: false              // whether to transform to rem unit (default: false)
+      autoRem: false,             // whether to transform to rem unit (default: false)
+      minify: false               // whether to minify the output css (default: false)
     }
     this.config = Object.assign({}, defaultConfig, options)
   }
 
   parse (code) {
+    const { minify } = this.config
     const astObj = css.parse(code)
     this._processRules(astObj.stylesheet.rules)
-    return css.stringify(astObj)
+    const output = css.stringify(astObj)
+    return minify ? cssmin(output) : output
   }
 
   _processRules (rules, noDealHairline = false) { // FIXME: keyframes do not support `hairline`
@@ -39,7 +43,7 @@ export default class Adaptive {
         continue
       }
 
-      // generate a new rule which has class `.hairline`
+      // generate a new rule which has `hairline` class
       let newRule = {}
       if (!noDealHairline) {
         newRule = {
@@ -59,7 +63,6 @@ export default class Adaptive {
           const originDeclarationValue = declaration.value
           let mode
 
-          // no transform & transform to `rem`
           if (nextDeclaration && nextDeclaration.type === 'comment') {
             mode = nextDeclaration.comment.trim()
             if (['rem', 'px', 'no'].indexOf(mode) !== -1) {
@@ -73,7 +76,6 @@ export default class Adaptive {
               declaration.value = this._getCalcValue(mode, declaration.value)
             }
           }
-          // common transform
           else {
             mode = autoRem ? 'rem' : 'px'
             declaration.value = this._getCalcValue(mode, declaration.value)
@@ -91,7 +93,7 @@ export default class Adaptive {
       // add the new rule of `hairline` to stylesheet
       if (!noDealHairline && newRule.declarations.length) {
         rules.splice(i + 1, 0, newRule)
-        i++ // skip the added new rule
+        i++ // skip the newly added rule
       }
     }
   }

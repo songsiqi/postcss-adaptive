@@ -1,5 +1,7 @@
 # postcss-adaptive
 
+A [postcss](https://www.npmjs.com/package/postcss) plugin that calculates and generates adaptive css code, such as `rem` and `0.5px borders for retina devices`.
+
 [![NPM version][npm-image]][npm-url]
 [![Build status][travis-image]][travis-url]
 [![Test coverage][coveralls-image]][coveralls-url]
@@ -14,14 +16,59 @@
 [downloads-image]: http://img.shields.io/npm/dm/postcss-adaptive.svg?style=flat-square
 [downloads-url]: https://npmjs.org/package/postcss-adaptive
 
-A [postcss](https://www.npmjs.com/package/postcss) plugin that calculates and generates adaptive css code, such as `rem` and `0.5px borders for retina devices`.
+## Table of Contents
+
+* [Requirements](#Requirements)
+* [Usage](#Usage)
+* [Changelog](#Changelog)
+* [License](#License)
+
+## Requirements
+
+Set rem unit and hairline class. For example:
+
+```javascript
+(function (win, doc) {
+  var docEl = doc.documentElement;
+
+  function setRemUnit () {
+    var docWidth = docEl.clientWidth;
+    var rem = docWidth / 10;
+    docEl.style.fontSize = rem + 'px';
+  }
+
+  win.addEventListener('resize', function () {
+    setRemUnit();
+  }, false);
+  win.addEventListener('pageshow', function (e) {
+    if (e.persisted) {
+      setRemUnit();
+    }
+  }, false);
+
+  setRemUnit();
+
+  if (win.devicePixelRatio && win.devicePixelRatio >= 2) {
+    var testEl = doc.createElement('div');
+    var fakeBody = doc.createElement('body');
+    testEl.style.border = '0.5px solid transparent';
+    fakeBody.appendChild(testEl);
+    docEl.appendChild(fakeBody);
+    if (testEl.offsetHeight === 1) {
+      docEl.classList.add('hairlines');
+    }
+    docEl.removeChild(fakeBody);
+  }
+}) (window, document);
+```
 
 ## Usage
 
 The raw stylesheet only contains @2x style, and if you
 
-* don't intend to transform the original value, add `/*no*/` after the declaration
 * intend to use `rem` unit，add `/*rem*/` after the declaration
+* don't intend to transform the original value, add `/*no*/` after the declaration
+* intend to use `px` unit when `autoRem` is set to `true`, add `/*px*/` after the declaration
 
 **Attention: Dealing with SASS or LESS, only `/*...*/` comment can be used, in order to have the comments persisted.**
 
@@ -31,9 +78,9 @@ Before processing:
 .selector {
   height: 64px;
   width: 150px; /*rem*/
+  padding: 10px; /*no*/
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
-  border-left: 1px solid #ddd; /*no*/
 }
 ```
 
@@ -43,9 +90,9 @@ After processing:
 .selector {
   height: 32px;
   width: 2rem;
+  padding: 10px;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
-  border-left: 1px solid #ddd;
 }
 .hairlines .selector {
   border-top: 0.5px solid #ddd;
@@ -53,7 +100,7 @@ After processing:
 }
 ```
 
-## API
+### API
 
 `adaptive(config)`
 
@@ -63,12 +110,13 @@ Config:
 * `baseDpr`: number, base device pixel ratio (default: 2)
 * `remPrecision`: number, rem value precision (default: 6)
 * `hairlineClass`: string, class name of 1px border (default 'hairlines')
-* `autoRem`: string, whether to transform to rem unit (default: false)
+* `autoRem`: boolean, whether to transform to rem unit (default: false)
+* `minify`: boolean, whether to minify the output css (default: false)
 
-### Node
+#### Node
 
 ```shell
-npm install postcss postcss-adaptive
+npm install postcss-adaptive
 ```
 
 ```javascript
@@ -78,11 +126,7 @@ var originCssText = '...';
 var newCssText = postcss().use(adaptive({ remUnit: 75 })).process(originCssText).css;
 ```
 
-### Gulp
-
-```shell
-npm install gulp-postcss postcss-adaptive
-```
+#### Gulp
 
 ```javascript
 var gulp = require('gulp');
@@ -97,11 +141,7 @@ gulp.task('default', function () {
 });
 ```
 
-### Webpack
-
-```shell
-npm install postcss-loader postcss-adaptive
-```
+#### Webpack
 
 ```javascript
 var adaptive = require('postcss-adaptive');
@@ -121,11 +161,7 @@ module.exports = {
 }
 ```
 
-### Grunt
-
-```shell
-npm install grunt-postcss postcss-adaptive
-```
+#### Grunt
 
 ```javascript
 module.exports = function (grunt) {
@@ -147,7 +183,11 @@ module.exports = function (grunt) {
 }
 ```
 
-## Change Log
+## Changelog
+
+### 0.3.0
+
+* Support `minify` option to minify the output css code.
 
 ### 0.2.0
 

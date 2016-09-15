@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "css": "^2.2.1",
+    "cssmin": "~0.4.3",
     "postcss": "^5.0.21"
   },
   "devDependencies": {

@@ -1,6 +1,7 @@
 var fs = require('fs')
 var chai = require('chai')
 var postcss = require('postcss')
+var cssmin = require('cssmin')
 var expect = chai.expect
 var adaptive = require('../')
 
@@ -70,5 +71,13 @@ describe('config', function () {
     var output = postcss().use(adaptive({ hairlineClass: 'hairline' })).process(fixture).css
     expect(output).is.a.string
     expect(output).eql(expected)
+  })
+
+  it('minify', function () {
+    var fixture = readFile('test/fixture.css')
+    var expected = readFile('test/expected.css')
+    var output = postcss().use(adaptive({ minify: true })).process(fixture).css
+    expect(output).is.a.string
+    expect(output).eql(cssmin(expected))
   })
 })
