@@ -1,5 +1,4 @@
 import css from 'css'
-import cssmin from 'cssmin'
 
 const PX_REG = /\b(\d+(\.\d+)?)px\b/
 const PX_GLOBAL_REG = new RegExp(PX_REG.source, 'g')
@@ -11,18 +10,15 @@ export default class Adaptive {
       remUnit: 75,                // rem unit value (default: 75)
       remPrecision: 6,            // rem value precision (default: 6)
       hairlineClass: 'hairlines', // class name of 1px border (default: 'hairlines')
-      autoRem: false,             // whether to transform to rem unit (default: false)
-      minify: false               // whether to minify the output css (default: false)
+      autoRem: false              // whether to transform to rem unit (default: false)
     }
     this.config = Object.assign({}, defaultConfig, options)
   }
 
   parse (code) {
-    const { minify } = this.config
     const astObj = css.parse(code)
     this._processRules(astObj.stylesheet.rules)
-    const output = css.stringify(astObj)
-    return minify ? cssmin(output) : output
+    return css.stringify(astObj)
   }
 
   _processRules (rules, noDealHairline = false) { // FIXME: keyframes do not support `hairline`

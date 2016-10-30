@@ -18,10 +18,10 @@ A [postcss](https://www.npmjs.com/package/postcss) plugin that calculates and ge
 
 ## Table of Contents
 
-* [Requirements](#Requirements)
-* [Usage](#Usage)
-* [Changelog](#Changelog)
-* [License](#License)
+* [Requirements](#requirements)
+* [Usage](#usage)
+* [Changelog](#changelog)
+* [License](#license)
 
 ## Requirements
 
@@ -80,7 +80,6 @@ Before processing:
   width: 150px; /*rem*/
   padding: 10px; /*no*/
   border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
 }
 ```
 
@@ -92,11 +91,9 @@ After processing:
   width: 2rem;
   padding: 10px;
   border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
 }
 .hairlines .selector {
   border-top: 0.5px solid #ddd;
-  border-bottom: 0.5px solid #ddd;
 }
 ```
 
@@ -111,7 +108,6 @@ Config:
 * `remPrecision`: number, rem value precision (default: 6)
 * `hairlineClass`: string, class name of 1px border (default 'hairlines')
 * `autoRem`: boolean, whether to transform to rem unit (default: false)
-* `minify`: boolean, whether to minify the output css (default: false)
 
 #### Node
 
@@ -184,6 +180,10 @@ module.exports = function (grunt) {
 ```
 
 ## Changelog
+
+### 0.3.1
+
+* Delete `minify` option, please use other postcss plugins like `cssnano` instead.
 
 ### 0.3.0
 
