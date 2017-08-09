@@ -97,17 +97,17 @@ export default class Adaptive {
   _getCalcValue (type, value, isHairline = false) {
     const { baseDpr, remUnit, remPrecision } = this.config
 
-    function getValue (val) {
+    function getValue (val, curType = type) {
       val = parseFloat(val.toFixed(remPrecision)) // control decimal precision of the calculated value
-      return val === 0 ? val : val + type
+      return val === 0 ? val : val + curType
     }
 
     return value.replace(PX_GLOBAL_REG, ($0, $1) => {
       $1 = Number($1)
       return $1 === 0 ? 0 :
-        type === 'rem' ? getValue($1 / remUnit) :
-        !isHairline && $1 / baseDpr < 1 ? getValue($1) :
-        getValue($1 / baseDpr > 0.5 ? $1 / baseDpr : 0.5)
+        type === 'rem' && $1 / baseDpr > 0.5 ? getValue($1 / remUnit) :
+        !isHairline && $1 / baseDpr < 1 ? getValue($1, 'px') :
+        getValue($1 / baseDpr > 0.5 ? $1 / baseDpr : 0.5, 'px')
     })
   }
 
@@ -115,6 +115,7 @@ export default class Adaptive {
     const { baseDpr } = this.config
     const match = value.match(PX_GLOBAL_REG)
 
+    /* istanbul ignore else */
     if (match) {
       return match.some((pxVal) => {
         const num = pxVal.match(PX_REG)[1] / baseDpr
