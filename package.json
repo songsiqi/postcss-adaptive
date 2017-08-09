@@ -1,6 +1,6 @@
 {
   "name": "postcss-adaptive",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A postcss plugin that calculates and generates adaptive css code, such as rem and 0.5px borders for retina devices",
   "main": "index.js",
   "author": "songsiqi <songsiqi2006@126.com>",
