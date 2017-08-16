@@ -4,6 +4,7 @@
   padding: 24.5px 24px 0;
   margin-top: 0px; /*rem*/
   margin-bottom: 0px;
+  margin-left: 20px; /*no*/
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   border-left: 10px solid #ddd;
@@ -39,6 +40,7 @@
     padding: 24.5px 24px 0;
     margin-top: 0px; /*rem*/
     margin-bottom: 0px;
+    margin-left: 20px; /*no*/
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
     border-left: 10px solid #ddd;

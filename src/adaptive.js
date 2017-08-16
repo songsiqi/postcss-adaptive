@@ -64,8 +64,12 @@ export default class Adaptive {
             if (['rem', 'px', 'no'].indexOf(mode) !== -1) {
               if (mode !== 'no') {
                 declaration.value = this._getCalcValue(mode, declaration.value)
+                declarations.splice(j + 1, 1) // delete corresponding comment
               }
-              declarations.splice(j + 1, 1) // delete corresponding comment
+              else {
+                declarations.splice(j + 1, 1) // delete corresponding comment
+                continue // do not generate `hairline` when there exist `no`
+              }
             }
             else {
               mode = autoRem ? 'rem' : 'px'

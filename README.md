@@ -181,6 +181,15 @@ module.exports = function (grunt) {
 
 ## Changelog
 
+### 0.4.0
+
+* Do not generate `hairline` when the declaration is commented with `/*no*/`.
+
+### 0.3.2
+
+* Upgrade postcss version to 6.x.
+* The value below 1px will not transfer to rem.
+
 ### 0.3.1
 
 * Delete `minify` option, please use other postcss plugins like `cssnano` instead.
