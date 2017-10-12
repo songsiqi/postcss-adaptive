@@ -6,6 +6,6 @@ export default postcss.plugin(pkg.name, (options) => {
   return (css, result) => {
     const adaptiveIns = new Adaptive(options)
     const output = adaptiveIns.parse(css.toString())
-    result.root = postcss.parse(output)
+    result.root = postcss.parse(output,{from: css.source.input.file})
   }
 })
