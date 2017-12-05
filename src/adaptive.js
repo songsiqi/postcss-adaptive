@@ -26,16 +26,17 @@ export default class Adaptive {
 
     for (let i = 0; i < rules.length; i++) {
       const rule = rules[i]
+      const ruleType = rule.type
 
-      if (rule.type === 'media') {
+      if (ruleType === 'media' || ruleType === 'supports') {
         this._processRules(rule.rules) // recursive invocation while dealing with media queries
         continue
       }
-      else if (rule.type === 'keyframes') {
+      else if (ruleType === 'keyframes') {
         this._processRules(rule.keyframes, true) // recursive invocation while dealing with keyframes
         continue
       }
-      else if (rule.type !== 'rule' && rule.type !== 'keyframe') {
+      else if (ruleType !== 'rule' && ruleType !== 'keyframe') {
         continue
       }
 
@@ -43,7 +44,7 @@ export default class Adaptive {
       let newRule = {}
       if (!noDealHairline) {
         newRule = {
-          type: rule.type,
+          type: ruleType,
           selectors: rule.selectors.map((sel) => `.${hairlineClass} ${sel}`),
           declarations: []
         }
